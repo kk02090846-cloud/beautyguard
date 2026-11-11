@@ -9,7 +9,7 @@ HEADERS = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)
 HISTORY_FILE = 'seen_reviews.json'
 
 def load_seen_reviews():
-\if os.path.exists(HISTORY_FILE):
+if os.path.exists(HISTORY_FILE):
 \try:
 \with open(HISTORY_FILE, 'r', encoding='utf-8') as f: return set(json.load(f))
 \except: return set()

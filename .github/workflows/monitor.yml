@@ -1,0 +1,27 @@
+name: BeautyGuard 24h Review Monitor
+
+on:
+  schedule:
+    # 1시간마다 자동 실행 (무료)
+    - cron: '0 * * * *'
+  workflow_dispatch: # 웹에서 'Run workflow' 버튼 눌러서 즉시 실행도 가능!
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: 감시 엔진 가동
+        run: python beautyguard_monitor.py
+      - name: 확인한 리뷰 저장 (중복 알림 방지)
+        run: |
+          git config --global user.name "beautyguard-bot"
+          git config --global user.email "bot@beautyguard.ai"
+          git add seen_reviews.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update seen reviews [skip ci]" && git push)
